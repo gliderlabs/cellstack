@@ -1,0 +1,3 @@
+description: elasticsearch
+image: elasticsearch:latest
+start: /usr/bin/docker run --name %p {{ $image }}

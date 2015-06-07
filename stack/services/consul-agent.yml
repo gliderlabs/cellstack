@@ -1,0 +1,14 @@
+description: consul agent
+image: gliderlabs/consul-agent:latest
+early: true
+start: |
+  /usr/bin/docker run --name %p \
+    --net host \
+    --env GOMAXPROCS=2 \
+    --env DNS_RESOLVES=consul \
+    --env DNS_PORT=8600 \
+    {{ $image }} \
+      -advertise $COREOS_PRIVATE_IPV4 \
+      -atlas {{ var "ATLAS_USER" }}/{{ var "CELL_NAME" }} \
+      -atlas-token {{ var "ATLAS_TOKEN" }} \
+      -atlas-join

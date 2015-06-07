@@ -1,0 +1,10 @@
+description: kibana
+image: pindar/kibana:latest
+pre: |
+  /usr/bin/docker run --rm --name pre-kibana progrium/toolbox \
+    wait-resolve elasticsearch.docker
+start: |
+  /usr/bin/docker run --name %p \
+    --publish 80:5601 \
+    --env ELASTICSEARCH_ENDPOINT=http://elasticsearch.docker:9200 \
+    {{ $image}}

@@ -1,0 +1,16 @@
+description: consul server
+image: gliderlabs/consul-server:latest
+early: true
+start: |
+  /usr/bin/docker run --name %p \
+    --net host \
+    --volume /mnt/consul:/data \
+    --env GOMAXPROCS=2 \
+    --env DNS_RESOLVES=consul \
+    --env DNS_PORT=8600 \
+    {{ $image }} \
+      -bootstrap-expect {{ $cluster }} \
+      -advertise $COREOS_PRIVATE_IPV4 \
+      -atlas {{ var "ATLAS_USER" }}/{{ var "CELL_NAME" }} \
+      -atlas-token {{ var "ATLAS_TOKEN" }} \
+      -atlas-join

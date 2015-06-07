@@ -1,0 +1,22 @@
+[Unit]
+Description=EARLY SERVICE
+Requires=docker.service
+After=docker.service
+Before=early-services.target
+
+[Install]
+WantedBy=early-services.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStartPre=/bin/sh -c "sleep 5"
+ExecStart=/bin/sh -c "\
+  echo '======> EARLY SERVICE STARTED <======' && \
+  sleep 180 && \
+  echo '======> EARLY SERVICE FINISHED <======'"
+ExecStartPost=/bin/sh -c "sleep 5 && echo 'EARLY POST START'"
+User=core
+TimeoutStartSec=60s
+TimeoutStopSec=60s
+RestartSec=30s
+Restart=on-failure

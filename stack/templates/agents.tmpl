@@ -1,0 +1,9 @@
+{{if exists "agents.yml" \}}
+{{  range $name := yaml "agents.yml" \}}
+{{    range $pattern := split "," (var "skip") \}}
+{{      if not (match $pattern $name) \}}
+{{        include "service.tmpl" (printf "name=%s" $name) \}}
+{{      end \}}
+{{    end \}}
+{{  end \}}
+{{end }}

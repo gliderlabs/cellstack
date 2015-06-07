@@ -1,0 +1,12 @@
+description: resolvable agent
+image: gliderlabs/resolvable:master
+early: true
+user: root
+pre: cd /etc && cp --remove-destination $(readlink resolv.conf) resolv.conf
+post: sleep 3
+start: |
+  /usr/bin/docker run --name %p \
+    --volume /etc/resolv.conf:/tmp/resolv.conf \
+    --volume /var/run/docker.sock:/tmp/docker.sock \
+    --env HOST_IP=$private_ipv4 \
+    {{ $image }}

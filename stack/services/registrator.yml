@@ -1,0 +1,11 @@
+description: registrator
+image: gliderlabs/registrator:master
+pre: |
+  /usr/bin/docker run --rm --net host --name pre-registrator progrium/toolbox \
+    wait-conn $COREOS_PRIVATE_IPV4:8500
+start: |
+  /usr/bin/docker run --name %p \
+    --volume /var/run/docker.sock:/tmp/docker.sock \
+    --net host \
+    {{ $image }} \
+      consul://$private_ipv4:8500

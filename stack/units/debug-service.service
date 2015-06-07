@@ -1,0 +1,19 @@
+[Unit]
+Description=DEBUG SERVICE
+Requires=docker.service
+After=docker.service early-services.target
+
+[Install]
+WantedBy=services.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/bin/sh -c "\
+  echo '======> DEBUG SERVICE STARTED <======' && \
+  sleep 180 && \
+  echo '======> DEBUG SERVICE FINISHED <======'"
+User=core
+TimeoutStartSec=60s
+TimeoutStopSec=30s
+RestartSec=30s
+Restart=on-failure

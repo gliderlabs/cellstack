@@ -1,0 +1,13 @@
+description: logstash
+image: logstash:latest
+pre: |
+  /usr/bin/docker run --rm --name pre-logstash progrium/toolbox \
+    wait-resolve elasticsearch.docker
+start: |
+  /usr/bin/docker run --name %p \
+    --publish $private_ipv4:514:5140 \
+    --publish $private_ipv4:514:5140/udp \
+    --env SERVICE_NAME=logstash \
+    {{ $image}} \
+      -e 'input { syslog { port => 5140 } } \
+          output { elasticsearch { host => "elasticsearch.docker" } }'

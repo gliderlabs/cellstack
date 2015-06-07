@@ -1,0 +1,6 @@
+[Unit]
+Requires=docker.service
+After=docker.service
+
+[Install]
+WantedBy=services.target

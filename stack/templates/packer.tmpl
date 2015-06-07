@@ -1,0 +1,18 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "instance_type": "t2.micro",
+    "region": "{{ var `region` }}",
+    "source_ami": "{{ var `ami_source` }}",
+    "ami_name": "{{ var `ami_name` }}",
+    "vpc_id": "{{ var `vpc_id` }}",
+    "subnet_id": "{{ var `subnet_id` }}",
+    "access_key": "{{ var `AWS_ACCESS_KEY_ID` }}",
+    "secret_key": "{{ var `AWS_SECRET_ACCESS_KEY` }}",
+    "ssh_username": "core"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": ["{{ include `bake.tmpl` | trim }}"]
+  }]
+}

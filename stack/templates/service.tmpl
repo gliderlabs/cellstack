@@ -1,0 +1,29 @@
+{{ $service := yaml (printf "%s.yml" $name) }}
+- name: {{ $name }}.service
+  enable: true
+  content: |
+    [Unit]
+    Description={{ $service.description | default "" }}
+    Requires=docker.service
+    After=docker.service
+    {{ if $service.early }}Before{{ else }}After{{ end }}=early-services.target
+
+    [Install]
+    WantedBy={{ if $service.early }}early-services{{ else }}services{{ end }}.target
+
+    [Service]
+    EnvironmentFile=/etc/environment
+    ExecStartPre=/bin/sh -c "\
+      if /usr/bin/docker diff %p &> /dev/null; then \
+        /usr/bin/docker rm -f %p ; \
+      fi"
+    ExecStop=/usr/bin/docker stop %p
+    TimeoutStartSec=60s
+    TimeoutStopSec=30s
+    RestartSec=10s
+    Restart=on-failure
+
+    User={{ default "core" $service.user }}
+    ExecStart={{ $service.start | render (printf "image=%s" $service.image) . | indent "    " }}
+    {{ if $service.pre }}ExecStartPre=/bin/sh -c "{{ $service.pre | trim | indent "    " }}"{{ end }}
+    {{ if $service.post }}ExecStartPost=/bin/sh -c "{{ $service.post | trim | indent "    " }}"{{ end }}

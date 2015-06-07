@@ -1,0 +1,4 @@
+- name: {{ $name }}
+  enable: true
+  content: |
+    {{ include (printf "units/%s" $name) . | indent "    " }}

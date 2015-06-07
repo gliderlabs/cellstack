@@ -1,0 +1,1 @@
+{{ range dir `services` }}docker pull {{ (yaml .).image }}; {{ end }}

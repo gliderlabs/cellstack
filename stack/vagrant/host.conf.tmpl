@@ -1,0 +1,9 @@
+#cloud-config
+coreos:
+  update:
+    reboot-strategy: off
+  units:
+    {{ include "host.tmpl" | indent "    " }}
+    {{ include "service.tmpl" "name=consul-server" "cluster=1" | indent "    " }}
+    {{ include "service.tmpl" "name=resolvable" | indent "    " }}
+    {{ include "service.tmpl" "name=registrator" | indent "    " }}

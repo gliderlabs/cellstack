@@ -1,0 +1,13 @@
+description: logspout agent
+image: gliderlabs/logspout:master
+pre: |
+  /usr/bin/docker run --rm --name pre-logspout progrium/toolbox \
+    wait-resolve logstash.service.consul
+start: |
+  /usr/bin/docker run --name %p \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    --hostname %H \
+    --env SYSLOG_FORMAT=rfc3164 \
+    --env DEBUG=true \
+    {{ $image }} \
+      syslog://logstash.service.consul:514
