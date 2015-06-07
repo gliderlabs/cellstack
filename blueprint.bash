@@ -27,7 +27,7 @@ blueprint-add() {
     exit 2
   fi
   mkdir -p "blueprints/$blueprint/$as"
-  echo "echo CELL_INFRA=$infra" > "blueprints/$blueprint/$as/infra.bash"
+  echo "export CELL_INFRA=$infra" > "blueprints/$blueprint/$as/infra.bash"
   #shopt -s nullglob
   #for path in infra/$infra/*.example; do
   #  local filename="$(basename $path)"

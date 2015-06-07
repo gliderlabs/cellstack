@@ -12,6 +12,7 @@ export CELL_REGION="${CELL_REGION:-us-east-1}"
 declare cell_rundir
 
 init() {
+  cmd-export cell-profile profile
   cmd-export cell-init init
   cmd-export cell-apply apply
   cmd-export cell-plan plan
@@ -57,7 +58,7 @@ cell-rundir-new() {
   cell-rundir-old | xargs rm -rf
 }
 
-cell-init() {
+cell-profile() {
   declare name="$1" blueprint="$2"
   echo "export CELL_NAME=$name"
   echo "export CELL_BLUEPRINT=$blueprint"
@@ -88,7 +89,12 @@ cell-output() {
   popd > /dev/null
 }
 
-
+cell-init() {
+  local stack_dir="$(dirname $BASH_SOURCE)/stack"
+  cp -r $stack_dir/* .
+  mkdir blueprints
+  mkdir .vagrant
+}
 
 cell-bake() {
   cell-apply "cell"
@@ -151,7 +157,7 @@ cell-prepare-run() {
   terraform init \
     -backend=atlas \
     -backend-config="name=$ATLAS_USER/$CELL_NAME" \
-    "$(dirname $BASH_SOURCE)/infra/cell-$CELL_TYPE" . > /dev/null
+    "$GUN_ROOT/$(dirname $BASH_SOURCE)/infra/cell-$CELL_TYPE" . > /dev/null
   echo "export TF_VAR_name=$CELL_NAME" > cell.bash
   popd > /dev/null
   popd > /dev/null
