@@ -13,7 +13,7 @@ declare cell_rundir
 
 init() {
   cmd-export cell-profile profile
-  cmd-export cell-init init
+  #cmd-export cell-init init
   cmd-export cell-apply apply
   cmd-export cell-plan plan
   cmd-export cell-destroy destroy
@@ -89,12 +89,12 @@ cell-output() {
   popd > /dev/null
 }
 
-cell-init() {
-  local stack_dir="$(dirname $BASH_SOURCE)/stack"
-  cp -r $stack_dir/* .
-  mkdir blueprints
-  mkdir .vagrant
-}
+#cell-init() {
+#  local stack_dir="$(dirname $BASH_SOURCE)/stack"
+#  cp -r $stack_dir/* .
+#  mkdir blueprints
+#  mkdir .vagrant
+#}
 
 cell-bake() {
   cell-apply "cell"

@@ -1,11 +1,11 @@
 
 init() {
   cmd-export-ns blueprint
-  cmd-export blueprint-init
+  cmd-export blueprint-create
   cmd-export blueprint-add
 }
 
-blueprint-init() {
+blueprint-create() {
   declare blueprint="$1" cell="${2:-standard}"
   : "${blueprint:?}"
   if [[ -d "blueprints/$blueprint" ]]; then
@@ -28,9 +28,12 @@ blueprint-add() {
   fi
   mkdir -p "blueprints/$blueprint/$as"
   echo "export CELL_INFRA=$infra" > "blueprints/$blueprint/$as/infra.bash"
-  #shopt -s nullglob
-  #for path in infra/$infra/*.example; do
-  #  local filename="$(basename $path)"
-  #  cp $path "blueprints/$blueprint/$as/${filename%%.example}"
-  #done
+  local roles
+  roles="$(cat infra/$infra/*.tf \
+    | sed 's/"//g' \
+    | grep 'resource aws_instance' \
+    | awk '{print $3}')"
+  for role in $roles; do
+      touch "blueprints/$blueprint/$as/$role.conf.tmpl"
+  done
 }
