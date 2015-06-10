@@ -12,6 +12,7 @@ init() {
 }
 
 vagrant-init() {
+  mkdir -p .vagrant
   if ! $vagrant_cmd box list | grep "coreos-$VAGRANT_CHANNEL" > /dev/null; then
     $vagrant_cmd box add "http://$VAGRANT_CHANNEL.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json"
   fi
