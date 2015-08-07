@@ -38,7 +38,7 @@ user-ami() {
 cell-rundir() {
   if [[ ! "$cell_rundir" ]]; then
     mkdir -p "$GUN_ROOT/.gun/runs"
-    cell_rundir="$(ls -1Ut $GUN_ROOT/.gun/runs/ | grep "$GUN_PROFILE-" | head -n 1)"
+    cell_rundir="$GUN_ROOT/.gun/runs/$(ls -1Ut $GUN_ROOT/.gun/runs/ | grep "$GUN_PROFILE-" | head -n 1)"
   fi
   echo "${cell_rundir:?}"
 }
