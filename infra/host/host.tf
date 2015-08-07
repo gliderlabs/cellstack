@@ -58,7 +58,7 @@ resource "aws_instance" "host" {
 }
 
 output "public_ips" {
-    value = "${join(\",\", aws_instance.node.*.public_ip)}"
+    value = "${join(\",\", aws_instance.host.*.public_ip)}"
 }
 
 output "name" {
