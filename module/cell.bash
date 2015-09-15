@@ -18,6 +18,7 @@ init() {
   cmd-export cell-plan plan
   cmd-export cell-destroy destroy
   cmd-export cell-output output
+  cmd-export cell-taint taint
   cmd-export cell-bake bake
 }
 
@@ -87,6 +88,17 @@ cell-output() {
   fi
   pushd "$(cell-rundir)/$target" > /dev/null
   terraform output $output
+  popd > /dev/null
+}
+
+cell-taint() {
+  declare name="$1" target="$2"
+  if [[ ! "$target" ]]; then
+    target=".cell"
+  fi
+  pushd "$(cell-rundir)/$target" > /dev/null
+  # XXX include additional options
+  terraform taint $name
   popd > /dev/null
 }
 
