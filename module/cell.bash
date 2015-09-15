@@ -18,6 +18,7 @@ init() {
   cmd-export cell-plan plan
   cmd-export cell-destroy destroy
   cmd-export cell-output output
+  cmd-export cell-taint taint
   cmd-export cell-bake bake
 }
 
@@ -28,7 +29,8 @@ coreos-ami() {
 
 user-ami() {
   declare region="$1" name="$2"
-  aws ec2 --region "$region" \
+  aws --output json \
+    ec2 --region "$region" \
     describe-images \
       --owners self \
       --filters "Name=name,Values=$name" \
@@ -38,7 +40,7 @@ user-ami() {
 cell-rundir() {
   if [[ ! "$cell_rundir" ]]; then
     mkdir -p "$GUN_ROOT/.gun/runs"
-    cell_rundir="$(ls -1Ut $GUN_ROOT/.gun/runs/ | grep "$GUN_PROFILE-" | head -n 1)"
+    cell_rundir="$GUN_ROOT/.gun/runs/$(ls -1Ut $GUN_ROOT/.gun/runs/ | grep "$GUN_PROFILE-" | head -n 1)"
   fi
   echo "${cell_rundir:?}"
 }
@@ -86,6 +88,17 @@ cell-output() {
   fi
   pushd "$(cell-rundir)/$target" > /dev/null
   terraform output $output
+  popd > /dev/null
+}
+
+cell-taint() {
+  declare name="$1" target="$2"
+  if [[ ! "$target" ]]; then
+    target=".cell"
+  fi
+  pushd "$(cell-rundir)/$target" > /dev/null
+  # XXX include additional options
+  terraform taint $name
   popd > /dev/null
 }
 
