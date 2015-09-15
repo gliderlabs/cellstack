@@ -28,7 +28,8 @@ coreos-ami() {
 
 user-ami() {
   declare region="$1" name="$2"
-  aws ec2 --region "$region" \
+  aws --output json \
+    ec2 --region "$region" \
     describe-images \
       --owners self \
       --filters "Name=name,Values=$name" \
